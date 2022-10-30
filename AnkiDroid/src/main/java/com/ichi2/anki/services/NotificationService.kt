@@ -67,7 +67,15 @@ class NotificationService : BroadcastReceiver() {
                 }
                 // Creates an explicit intent for an Activity in your app
                 val resultIntent = Intent(context, DeckPicker::class.java)
-                resultIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                
+                if (Helper.isAppRunning(Helper.this, "com.ankidroid.app")) {
+                    resultIntent = Intent.FLAG_ACTIVITY_NEW_TASK
+                } else {
+                    resultIntent = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                
+                // resultIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                
                 val resultPendingIntent = CompatHelper.compat.getImmutableActivityIntent(
                     context, 0, resultIntent,
                     PendingIntent.FLAG_UPDATE_CURRENT
