@@ -1,0 +1,10 @@
+class Helper {
+    
+    public boolean isAppRunning{
+    
+    if (//app running) {
+        return true;
+    } else {
+        return false;
+    }
+}
