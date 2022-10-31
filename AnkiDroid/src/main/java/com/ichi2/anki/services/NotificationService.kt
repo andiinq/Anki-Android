@@ -69,9 +69,9 @@ class NotificationService : BroadcastReceiver() {
                 val resultIntent = Intent(context, DeckPicker::class.java)
                 
                 if (Helper.isAppRunning(Helper.this, "com.ankidroid.app")) {
-                    resultIntent = Intent.FLAG_ACTIVITY_NEW_TASK
+                    resultIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 } else {
-                    resultIntent = Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    resultIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
                 
                 // resultIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
