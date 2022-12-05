@@ -98,6 +98,15 @@ class ReminderService : BroadcastReceiver() {
             val total = deckDue.revCount + deckDue.lrnCount + deckDue.newCount
             if (total <= 0) {
                 Timber.v("onReceive - no cards due in deck %d", deckId)
+                //check if the app is running
+                if (isAppRunning(context,"com.ankidroid.com")) {
+                    //if so create a new notifcationIntent that will clear the current flags (holding notification information) and open the app
+                        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+                        notification.setLatestEventInfo(context, title, message, intent);
+                        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+                        notificationManager.notify(0, notification);
+                }
                 continue
             }
             Timber.v("onReceive - deck '%s' due count %d", deckDue.fullDeckName, total)
@@ -176,6 +185,23 @@ class ReminderService : BroadcastReceiver() {
 
         fun getReviewDeckIntent(context: Context, deckId: DeckId): Intent {
             return Intent(context, IntentHandler::class.java).putExtra(EXTRA_DECK_ID, deckId)
+        }
+    }
+    
+    // helper function to check if app is running
+    
+    private static boolean isAppRunning(final Context context, final String packageName) {
+            final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            final List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager.getRunningAppProcesses();
+            if (procInfos != null)
+            {
+                for (final ActivityManager.RunningAppProcessInfo processInfo : procInfos) {
+                    if (processInfo.processName.equals(packageName)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }
